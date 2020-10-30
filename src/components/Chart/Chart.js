@@ -4,7 +4,7 @@ import { fetchDailyData } from '../api/';
 
 import styles from './Chart.module.css';
 
-const Chart = () => {
+const Chart = ({ data, country }) => {
     const [dailyData, setDailyData] = useState([]);
 
     useEffect(() => {
@@ -15,8 +15,27 @@ const Chart = () => {
 
         fetchAPI();
 
-    }, [dailyData]);
+    }, []);
 
+    const barChart = (
+        data.confirmed ? (
+            <Bar
+                data={{
+                    labels: ['Infected', 'Recovered', 'Deaths'],
+                    datasets: [
+                        {
+                            label: 'People',
+                            backgroundColor: ['rgba(0, 0, 255, 0.5)', 'rgba(0, 255, 0, 0.5)', 'rgba(255, 0, 0, 0.5)'],
+                            data: [data.confirmed.value, data.recovered.value, data.deaths.value],
+                        },
+                    ],
+                }}
+                options={{
+                    legend: { display: false },
+                }}
+            />
+        ) : null
+    );
 
     const lineChart = (
         dailyData.length
@@ -29,7 +48,13 @@ const Chart = () => {
                                     maxRotation: 90,
                                     minRotation: 90
                                 }
-                            }]
+                            }],
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                fontSize: 14
+                            }
                         }
                     }}
                     data={{
@@ -48,9 +73,14 @@ const Chart = () => {
                             backgroundColor: 'rgba(255, 0, 0, 0.2)',
                             fill: true,
 
+                        }, {
+                            data: dailyData.map((data) => data.recovered),
+                            label: 'Recovered',
+                            borderColor: 'green',
+                            backgroundColor: 'rgba(0, 255, 0, 0.5)',
+                            fill: true,
                         },
                         ],
-
                     }}
                 />) : null
     )
@@ -58,7 +88,7 @@ const Chart = () => {
 
     return (
         <div className={styles.container}>
-            {lineChart}
+            {country ? barChart : lineChart}
         </div>
     );
 };

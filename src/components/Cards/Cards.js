@@ -4,12 +4,13 @@ import styles from './Cards.module.css';
 import CountUp from 'react-countup';
 import cx from 'classnames';
 
-const Cards = ({ data: { confirmed, recovered, deaths, lastUpdate } }) => {
+const Cards = ({ data: { confirmed, recovered, deaths, lastUpdate }, country }) => {
     if (!confirmed) {
         return ' Loading...';
     }
     return (
         <div className={styles.container}>
+            <h1 className={styles.title}>{country ? country : 'Global'}</h1>
             <Grid container spacing={3} justify="center" alignItems="center">
                 <Grid item component={Card} xs={12} md={3} className={cx(styles.card, styles.infected)}>
                     <CardContent>
